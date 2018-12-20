@@ -7,6 +7,8 @@ import { initializeFirebase } from './push-notifications.js';
 
 import authentication from 'react-azure-adb2c';
 
+import config from './config.js';
+
 authentication.initialize({
     tenant: `${process.env.REACT_APP_AUTHENTICATION_TENANT}`,
     signInPolicy: `${process.env.REACT_APP_AUTHENTICATION_SIGN_IN_POLICY}`,
@@ -22,7 +24,7 @@ authentication.run(() => {
   ReactDOM.render(<App />, document.getElementById('root'));
   //registerServiceWorker();  
 
-  if (process.env.REACT_APP_NOTIFICATIONS_ENABLED) {
+  if (config.notificationsEnabled) {
     initializeFirebase();
   }
 });

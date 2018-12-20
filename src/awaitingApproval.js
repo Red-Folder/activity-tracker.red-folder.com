@@ -12,8 +12,14 @@ let AwaitingApprovalResource = createResource(() => {
   };
 
   return fetch("https://rfc-activity.azurewebsites.net/api/GetPendingApprovals", options)
-        .then(res => res.json())
-});
+        .then(res => {
+          let result =res.json();
+
+          console.log(result);
+          //return res.json();
+          return result;
+        });
+  });
 
 function AwaitingApprovalItem({ className, component: Component = "li", ...props }) {
   return (
@@ -27,15 +33,15 @@ function AwaitingApprovalItem({ className, component: Component = "li", ...props
 function AwaitingApprovalList() {
   return (
     <ul>
-      {AwaitingApprovalResource.read(cache).results.map(pokemon => (
-        <AwaitingApprovalItem key={pokemon.name}>{pokemon.name}</AwaitingApprovalItem>
+      {AwaitingApprovalResource.read(cache).map(item => (
+        <AwaitingApprovalItem key={item.imageUrl}>{item.imageUrl}</AwaitingApprovalItem>
       ))}
     </ul>
   );
 }
 
 const AwaitingApproval = () => (
-    <React.Suspense fallback={<div>loading Pokemon...</div>}>
+    <React.Suspense fallback={<div>loading data...</div>}>
         <AwaitingApprovalList />
     </React.Suspense>
 );

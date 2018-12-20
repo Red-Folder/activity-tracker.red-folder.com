@@ -3,6 +3,8 @@ import './App.css';
 import NotificationButton from './notificationButton.js';
 import AwaitingApproval from './awaitingApproval.js';
 
+import config from './config.js';
+
 class App extends Component {
   render() {
     return (
@@ -10,7 +12,7 @@ class App extends Component {
         <div>
           <AwaitingApproval />
         </div>
-        <NotificationButton />
+        {config.notificationsEnabled &&  <NotificationButton />}
       </div>
     );
   }
