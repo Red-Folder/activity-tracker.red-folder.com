@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "^3.4.0",
     "firebase": "5.5.8",
     "msal": "0.2.3",
     "react": "^16.6.3",
     "react-azure-adb2c": "0.2.0",
+    "react-bootstrap": "^0.32.4",
     "react-cache": "^16.6.0-alpha.8af6728",
     "react-dom": "^16.6.3",
-    "react-scripts": "2.1.1",
-    "react-router-dom": "4.3.1"
+    "react-router-dom": "4.3.1",
+    "react-scripts": "2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

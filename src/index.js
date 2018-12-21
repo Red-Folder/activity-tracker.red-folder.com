@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { initializeFirebase } from './push-notifications.js';
@@ -10,6 +9,10 @@ import SplashPage from './spashPage.js';
 import authentication from 'react-azure-adb2c';
 
 import config from './config.js';
+
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-theme.css';
+import './index.css';
 
 authentication.initialize({
     tenant: `${process.env.REACT_APP_AUTHENTICATION_TENANT}`,
