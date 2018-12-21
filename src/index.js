@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { initializeFirebase } from './push-notifications.js';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import SplashPage from './spashPage.js';
 
 import authentication from 'react-azure-adb2c';
 
@@ -20,14 +22,22 @@ authentication.initialize({
     postLogoutRedirectUri: `${process.env.REACT_APP_AUTHENTICATION_POST_LOGOUT_REDIRECT_URI}`
 });
 
-authentication.run(() => {
-  ReactDOM.render(<App />, document.getElementById('root'));
-  //registerServiceWorker();  
+ReactDOM.render(
+  <div id="main-container">
+    <Router>
+      <div>
+        <Route path="/" exact component={SplashPage}/>
+        <Route path="/activity" component={authentication.required(App)} />
+      </div>
+    </Router>
+  </div>,
+  document.getElementById('root'));
 
-  if (config.notificationsEnabled) {
-    initializeFirebase();
-  }
-});
+
+if (config.notificationsEnabled) {
+  initializeFirebase();
+}
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
