@@ -1,10 +1,4 @@
-#splash-page {
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
-
-#splash-page-logo {
+#rfc-logo {
     background-color: white;
     border-color: rgb(31,31,31);
     border-style: solid;

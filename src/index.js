@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { initializeFirebase } from './push-notifications.js';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import SplashPage from './spashPage.js';
+
+import SplashPage from './splashPage/spashPage.js';
+import AwaitingApprovalPage from './awaitingApprovalPage/awaitingApprovalPage.js';
 
 import authentication from 'react-azure-adb2c';
 
@@ -30,7 +31,7 @@ ReactDOM.render(
     <Router>
       <div>
         <Route path="/" exact component={SplashPage}/>
-        <Route path="/activity" component={authentication.required(App)} />
+        <Route path="/awaiting-approval" component={authentication.required(AwaitingApprovalPage)} />
       </div>
     </Router>
   </div>,

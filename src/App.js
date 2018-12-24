@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import NotificationButton from './notificationButton.js';
-import AwaitingApproval from './awaitingApproval.js';
 
 import config from './config.js';
 
@@ -9,9 +8,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div>
-          <AwaitingApproval />
-        </div>
         {config.notificationsEnabled &&  <NotificationButton />}
       </div>
     );
