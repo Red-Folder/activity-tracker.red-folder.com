@@ -6,12 +6,15 @@ body {
   padding-bottom: 10vh;
   height: 100vh;
   width: 100vw;
-  background-color: black;
+  background-color: rgb(73,76,81);
 }
 
 #main-container {
-  background-color: grey;
-  height: 80vh;
+  background-color: rgb(227,231,237);
+  min-height: 80vh;
+  border-color: rgb(31,31,31);
+  border-width: 12px;
+  border-style: solid;
   border-radius: 25px;
   padding: 50px;
 }
