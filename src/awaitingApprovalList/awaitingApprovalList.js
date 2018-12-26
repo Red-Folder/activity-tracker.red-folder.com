@@ -3,12 +3,12 @@ import React from 'react';
 import { getAll } from '../resources/awaitingApprovals.js';
 
 function AwaitingApprovalRow({key, item}) {
-  const { eventName, instanceId, weekNo, from, to } = item;
+  const { eventName, instanceId, weekNumber, from, to } = item;
   const reviewUrl = `/approve/${eventName}/${instanceId}`;
   return (
     <tr>
       <td>{instanceId}</td>
-      <td>{weekNo}</td>
+      <td>{weekNumber}</td>
       <td>{from}</td>
       <td>{to}</td>
       <td>

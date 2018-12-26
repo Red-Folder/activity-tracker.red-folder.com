@@ -1,19 +1,13 @@
 import React from 'react';
 
-import { getByEventNameAndInstanceId } from '../resources/awaitingApprovals.js';
+import { getByEventNameAndInstanceId, approve, decline } from '../resources/awaitingApprovals.js';
 
-const approve = (eventName, instanceId) => {
-    console.log(eventName);
-    console.log(instanceId);
-    alert('TODO: Approve');
-    redirectToAwaitingApprovals();
+const handleApprove = (eventName, instanceId) => {
+    approve(eventName, instanceId).then(() => redirectToAwaitingApprovals());
 }
 
-const decline = (eventName, instanceId) => {
-    console.log(eventName);
-    console.log(instanceId);
-    alert('TODO: Decline');
-    redirectToAwaitingApprovals();
+const handleDecline = (eventName, instanceId) => {
+    decline(eventName, instanceId).then(() => redirectToAwaitingApprovals());
 }
 
 const redirectToAwaitingApprovals = () => {
@@ -33,8 +27,8 @@ const ReviewPanel = (props) => {
                     <img src={data.imageUrl} alt={'Image for' + data.weekNumber} className='img-responsive' />
                 </div>
                 <div>
-                    <button onClick={() => approve(eventName, instanceId)} className='btn btn-primary'>Approve</button>
-                    <button onClick={() => decline(eventName, instanceId)} className='btn btn-primary'>Decline</button>
+                    <button onClick={() => handleApprove(eventName, instanceId)} className='btn btn-primary'>Approve</button>
+                    <button onClick={() => handleDecline(eventName, instanceId)} className='btn btn-primary'>Decline</button>
                     <a href='/awaiting-approval' className='btn btn-primary'>Return</a>
                 </div>
             </div>
