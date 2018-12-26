@@ -34,9 +34,9 @@ export const getByEventNameAndInstanceId = (eventName, instanceId) => {
 export const approve = (eventName, instanceId) => updateApproval(eventName, instanceId, true);
 export const decline = (eventName, instanceId) => updateApproval(eventName, instanceId, false);
 
-const updateApproval = (eventName, instanceId, approve) => {
+const updateApproval = (eventName, instanceId, approved) => {
   const headers = new Headers({
-    'Authorization': `Bearer ${authentication.getAccessToken()}`,
+    Authorization: `Bearer ${authentication.getAccessToken()}`,
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   });
@@ -46,7 +46,7 @@ const updateApproval = (eventName, instanceId, approve) => {
     body: JSON.stringify({
       eventName,
       instanceId,
-      approve
+      approved
     })
   };
 
