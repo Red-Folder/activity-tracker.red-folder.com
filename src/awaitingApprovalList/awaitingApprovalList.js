@@ -1,21 +1,6 @@
 import React from 'react';
-import { createCache, createResource } from "react-cache";
 
-import authentication from 'react-azure-adb2c';
-
-let cache = createCache();
-
-let AwaitingApprovalResource = createResource(() => {
-  const headers = new Headers({ Authorization: `Bearer ${authentication.getAccessToken()}` });
-  const options = {
-    headers
-  };
-
-  return fetch("https://rfc-activity.azurewebsites.net/api/GetPendingApprovals", options)
-    .then(res => {
-      return res.json();
-    });
-});
+import { getAll } from '../resources/awaitingApprovals.js';
 
 function AwaitingApprovalRow({key, item}) {
   const { eventName, instanceId, weekNo, from, to } = item;
@@ -34,7 +19,7 @@ function AwaitingApprovalRow({key, item}) {
 }
 
 function AwaitingApprovalTable() {
-  const list = AwaitingApprovalResource.read(cache);
+  const list = getAll();
 
   if (list && list.length > 0) {
     return (
