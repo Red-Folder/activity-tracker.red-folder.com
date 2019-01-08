@@ -11,6 +11,8 @@ import ReviewPage from './reviewPage/reviewPage.js';
 import authentication from 'react-azure-adb2c';
 import { Login, requiresLogin } from './login/login.js';
 
+import LinkedIn from './linkedIn/linkedIn.js';
+
 import config from './config.js';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -36,6 +38,7 @@ ReactDOM.render(
         <Route path="/awaiting-approval" component={requiresLogin(AwaitingApprovalPage)} />
         <Route path="/approve/:eventName/:instanceId" component={requiresLogin(ReviewPage)} />
         <Route path="/login" component={authentication.required(Login)} />  
+        <Route path="/linkedin" component={LinkedIn} />
       </div>
     </Router>
   </div>,
