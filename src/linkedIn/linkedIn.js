@@ -9,7 +9,7 @@ const redirectToLinkedIn = () => {
         'response_type=code&' +
         `client_id=${process.env.REACT_APP_LINKEDIN_CLIENT_ID}&` +
         'state=todo&' +
-        'scope=w_share&' +
+        'scope=w_member_social&' +
         `redirect_uri=${redirectUri}`;
 
     window.location = targetUrl;
@@ -24,7 +24,10 @@ const authCallback = (props) => {
         const state = parameters.state;
 
         requestAccessToken(code, redirectUri)
-            .then(data => console.log(data));
+            .then(data => {
+                testShare(data.accessToken)
+                    .then(() => console.log("Share should have been made"));
+            });
 
         return <div>{code}</div>;
     }
@@ -53,6 +56,18 @@ const requestAccessToken = (code) => {
         .then(res => {
             return res.json();
         });
+}
+
+const testShare = (accessToken) => {
+    var payload = {
+        accessToken: accessToken
+    };
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(payload)
+    };
+
+    return fetch("http://localhost:7071/api/LinkedInTestPost", options);
 }
 
 const LinkedIn = () =>
