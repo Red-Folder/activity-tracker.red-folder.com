@@ -1,9 +1,6 @@
-import React from 'react';
-import { unstable_createResource as createResource } from "react-cache";
-
 import authentication from 'react-azure-adb2c';
 
-const awaitingApprovalsResource = createResource(() => {
+const pendingApprovalsFetch = () => {
   const headers = new Headers({ 'Authorization': `Bearer ${authentication.getAccessToken()}` });
   const options = {
     headers
@@ -13,22 +10,22 @@ const awaitingApprovalsResource = createResource(() => {
     .then(res => {
       return res.json();
     });
-});
+}
 
 export const getAll = () => {
-  return awaitingApprovalsResource.read();
+  return pendingApprovalsFetch();
 }
 
 export const getByEventNameAndInstanceId = (eventName, instanceId) => {
-  const all = getAll();
-  const matches = all.filter(x => x.eventName === eventName && x.instanceId === instanceId);
-
-  const context = React.createContext(null);
-  if (matches) {
-    return matches[0];
-  }
-
-  return null;
+  return getAll()
+          .then(all => {
+            const matches = all.filter(x => x.eventName === eventName && x.instanceId === instanceId);
+            if (matches) {
+              return matches[0];
+            }
+          
+            return null;
+          });
 }
 
 export const approve = (eventName, instanceId) => updateApproval(eventName, instanceId, true);

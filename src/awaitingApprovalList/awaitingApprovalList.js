@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { getAll } from '../resources/awaitingApprovals.js';
 
-function AwaitingApprovalRow({key, item}) {
+const AwaitingApprovalRow = ({item}) => {
   const { eventName, instanceId, weekNumber, from, to } = item;
   const reviewUrl = `/approve/${eventName}/${instanceId}`;
   return (
@@ -18,40 +18,56 @@ function AwaitingApprovalRow({key, item}) {
   );
 }
 
-function AwaitingApprovalTable() {
-  const list = getAll();
+const AwaitingApprovalTable = () => {
+  const [list, setList] = useState(null);
 
-  if (list && list.length > 0) {
-    return (
-      <table className="table">
-        <tbody>
-          <tr>
-            <th>ID</th>
-            <th>Week No</th>
-            <th>From</th>
-            <th>To</th>
-            <th></th>
-          </tr>
+  const fetchData = async () => {
+    const data = await getAll();
 
-          {list.map(item => (
-            <AwaitingApprovalRow key={item.instanceId}
-              item={item} />
-          ))}
+    setList(data);
+  };
 
-        </tbody>
-      </table>
-    );
-  }
+  useEffect(() => {
+    fetchData()
+  }, []);
 
   return (
-    <p>No records awaiting approval</p>
+    <div>
+      {
+        !list &&
+        <p>Loading</p>
+      }
+      {
+        list && list.length === 0 &&
+        <p>No records awaiting approval</p>
+      }
+      {
+        list && list.length > 0 &&
+        <table className="table">
+          <tbody>
+            <tr>
+              <th>ID</th>
+              <th>Week No</th>
+              <th>From</th>
+              <th>To</th>
+              <th></th>
+            </tr>
+
+            {list.map(item => (
+              <AwaitingApprovalRow key={item.instanceId} item={item} />
+            ))}
+
+          </tbody>
+        </table>
+      }
+    </div>
   );
 }
 
 const AwaitingApprovalList = () => (
-  <React.Suspense fallback={<div>loading data...</div>}>
+  <div>
     <AwaitingApprovalTable />
-  </React.Suspense>
+  </div>
 );
 
 export default AwaitingApprovalList;
