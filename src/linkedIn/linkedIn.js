@@ -1,35 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import queryString from 'query-string';
+import { Redirect } from 'react-router-dom';
+import AuthCallback from './authCallback.js';
+import { retrieveAccessToken } from './accessTokenRepository.js';
 
-const redirectUri = 'http://localhost:3000/linkedin/auth/callback';
+const redirectAfterAuthenticationUri = 'http://localhost:3000/linkedin/auth/callback';
 
-const redirectToLinkedIn = () => {
-    const targetUrl = 'https://www.linkedin.com/oauth/v2/authorization?' +
+const redirectToLinkedIn = (props) => {
+    const parameters = queryString.parse(props.location.search);
+    const targetUrl = parameters.targetUrl;
+    const redirectTo = 'https://www.linkedin.com/oauth/v2/authorization?' +
         'response_type=code&' +
         `client_id=${process.env.REACT_APP_LINKEDIN_CLIENT_ID}&` +
-        'state=todo&' +
+        `state=${targetUrl}&` +
         'scope=w_member_social&' +
-        `redirect_uri=${redirectUri}`;
+        `redirect_uri=${redirectAfterAuthenticationUri}`;
 
-    window.location = targetUrl;
+    window.location = redirectTo;
     return null;
 }
 
+/*
 const authCallback = (props) => {
+    console.log("Called");
     const parameters = queryString.parse(props.location.search);
+    const [hasAccessToken, receivedAccessToken] = useState(false);
 
     if (parameters.code) {
         const code = parameters.code;
-        const state = parameters.state;
+        const originalTargetUrl = decodeURI(parameters.state);
 
-        requestAccessToken(code, redirectUri)
+        requestAccessToken(code, redirectAfterAuthenticationUri)
             .then(data => {
-                testShare(data.accessToken)
-                    .then(() => console.log("Share should have been made"));
+                saveAccessToken(data);
+                receivedAccessToken(true);
             });
 
-        return <div>{code}</div>;
+        return (
+            <div>
+                <div>{code}</div>
+                <div>{originalTargetUrl}</div>
+                {hasAccessToken && <Redirect to={originalTargetUrl} />}
+            </div>
+        );
     }
 
     const error = parameters.error;
@@ -41,11 +55,37 @@ const authCallback = (props) => {
             <p>{error_description}</p>
         </div>);
 }
+*/
 
+const share = (props) => {
+    const data = retrieveAccessToken(null);
+
+    debugger;
+    if (data && data.accessToken) {
+
+        /*
+        testShare(data.accessToken)
+            .then(() => console.log("Share should have been made"));
+        */
+
+        return (
+            <div>
+                <div>Sharing ...</div>
+                <p>data</p>
+            </div>
+        );
+    }
+    
+    const originalTarget = encodeURI(props.location.pathname);
+    const redirectUrl = `/linkedin?targetUrl=${originalTarget}`;
+    return <Redirect to={redirectUrl} />
+}
+
+/*
 const requestAccessToken = (code) => {
     var payload = {
         code: code,
-        redirectUri: redirectUri
+        redirectUri: redirectAfterAuthenticationUri
     };
     const options = {
         method: 'POST',
@@ -57,6 +97,7 @@ const requestAccessToken = (code) => {
             return res.json();
         });
 }
+*/
 
 const testShare = (accessToken) => {
     var payload = {
@@ -73,8 +114,9 @@ const testShare = (accessToken) => {
 const LinkedIn = () =>
     <div>
         <Switch>
-            <Route path="*/auth/callback" component={authCallback} />
-            <Route component={redirectToLinkedIn} />
+            <Route path="*/auth/callback" component={AuthCallback} />
+            <Route path="*/share" component={share} />
+            <Route path="*" component={redirectToLinkedIn} />
         </Switch>
     </div>;
 

@@ -1,6 +1,9 @@
-import React from "react";
-import { Route } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Redirect } from 'react-router-dom';
 import queryString from 'query-string';
+import { retrieveAccessToken, saveAccessToken } from './accessTokenRepository.js';
+
+const redirectAfterAuthenticationUri = 'http://localhost:3000/linkedin/auth/callback';
 
 const noParameters = parameters => !parameters;
 const neitherErrorOrCode = parameters => !(parameters.error || parameters.code);
@@ -88,28 +91,32 @@ const parseResponse = (parameters) => {
 }
 
 const AuthCallback = (props) => {
+    console.log('AuthCallback Loaded');
     const parameters = props.location && props.location.search ? queryString.parse(props.location.search): undefined;
     const linkedInResponse = parseResponse(parameters);
 
-    //console.log(linkedInResponse);
+    const [waitingForResponse, setResponse] = useState(true);
 
-    /*
-                requestAccessToken(code, redirectUri)
-                    .then(data => console.log(data));
-
-                return <div>{code}</div>;
-    */
+    const fetchAccessKey = async () => {
+        const data = await requestAccessToken(linkedInResponse.code, redirectAfterAuthenticationUri);
+        saveAccessToken(data);
+        setResponse(false);
+    };
 
     if (!linkedInResponse.error) {
-        requestAccessToken(linkedInResponse.code, linkedInResponse.redirectUri)
-                    .then(data => console.log(data));
+        useEffect(() => {
+            fetchAccessKey()
+        }, [linkedInResponse.code]);
     }
 
     return (
         <div>
+            <p>{linkedInResponse.redirectUri}</p>
             {
                 !linkedInResponse.error &&
                 <div>
+                    { waitingForResponse && <p>Loading...</p> }
+                    { !waitingForResponse && <Redirect to={linkedInResponse.redirectUri} /> }
                 </div>
             }
             {
