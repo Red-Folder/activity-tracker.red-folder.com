@@ -6,7 +6,7 @@ import logo from './rfc-folder-logo.png';
 
 const RfcLogo = () => (
     <div>
-        <img id='rfc-logo' src={logo} alt="RFC Logo" class="img-circle" />
+        <img id='rfc-logo' src={logo} alt="RFC Logo" className="img-circle" />
     </div>
 );
 export default RfcLogo;

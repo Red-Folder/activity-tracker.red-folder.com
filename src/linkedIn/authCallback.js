@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from 'react-router-dom';
 import queryString from 'query-string';
-import { retrieveAccessToken, saveAccessToken } from './accessTokenRepository.js';
+import { saveAccessToken } from './accessTokenRepository.js';
 
 const redirectAfterAuthenticationUri = 'http://localhost:3000/linkedin/auth/callback';
 
@@ -91,7 +91,6 @@ const parseResponse = (parameters) => {
 }
 
 const AuthCallback = (props) => {
-    console.log('AuthCallback Loaded');
     const parameters = props.location && props.location.search ? queryString.parse(props.location.search): undefined;
     const linkedInResponse = parseResponse(parameters);
 

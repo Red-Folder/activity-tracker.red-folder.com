@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import queryString from 'query-string';
 import { Redirect } from 'react-router-dom';
@@ -14,90 +14,49 @@ const redirectToLinkedIn = (props) => {
         'response_type=code&' +
         `client_id=${process.env.REACT_APP_LINKEDIN_CLIENT_ID}&` +
         `state=${targetUrl}&` +
-        'scope=w_member_social&' +
+        //'scope=r_liteprofile&' +
+        //'scope=r_basicprofile&' +
+        'scope=r_liteprofile w_member_social&' +
         `redirect_uri=${redirectAfterAuthenticationUri}`;
 
     window.location = redirectTo;
     return null;
 }
 
-/*
-const authCallback = (props) => {
-    console.log("Called");
-    const parameters = queryString.parse(props.location.search);
-    const [hasAccessToken, receivedAccessToken] = useState(false);
-
-    if (parameters.code) {
-        const code = parameters.code;
-        const originalTargetUrl = decodeURI(parameters.state);
-
-        requestAccessToken(code, redirectAfterAuthenticationUri)
-            .then(data => {
-                saveAccessToken(data);
-                receivedAccessToken(true);
-            });
-
-        return (
-            <div>
-                <div>{code}</div>
-                <div>{originalTargetUrl}</div>
-                {hasAccessToken && <Redirect to={originalTargetUrl} />}
-            </div>
-        );
-    }
-
-    const error = parameters.error;
-    const error_description = parameters.error_description;
-    return (
-        <div>
-            <h1>An error has occurred</h1>
-            <p>Error Code: {error}</p>
-            <p>{error_description}</p>
-        </div>);
-}
-*/
-
 const share = (props) => {
     const data = retrieveAccessToken(null);
 
-    debugger;
-    if (data && data.accessToken) {
+    const postShare = async (data) => {
+        if (data && data.accessToken) {
+            //var response = await testShare(data.accessToken);
+            //console.log(response);
+            console.log(data.accessToken);
+            console.log("Will Share");
+        }
+    };
 
-        /*
-        testShare(data.accessToken)
-            .then(() => console.log("Share should have been made"));
-        */
+    useEffect(() => {
+        postShare(data);
+    }, [data]);
 
-        return (
-            <div>
-                <div>Sharing ...</div>
-                <p>data</p>
-            </div>
-        );
-    }
-    
     const originalTarget = encodeURI(props.location.pathname);
     const redirectUrl = `/linkedin?targetUrl=${originalTarget}`;
-    return <Redirect to={redirectUrl} />
+    return (
+        <div>
+            { 
+                data && data.accessToken &&
+                <div>
+                    <div>Sharing ...</div>
+                    <p>data</p>
+                </div>
+            }
+            {
+                !(data && data.accessToken) &&
+                <Redirect to={redirectUrl} />
+            }
+        </div>
+    );
 }
-
-/*
-const requestAccessToken = (code) => {
-    var payload = {
-        code: code,
-        redirectUri: redirectAfterAuthenticationUri
-    };
-    const options = {
-        method: 'POST',
-        body: JSON.stringify(payload)
-    };
-
-    return fetch("http://localhost:7071/api/RequestLinkedInAccessToken", options)
-        .then(res => {
-            return res.json();
-        });
-}
-*/
 
 const testShare = (accessToken) => {
     var payload = {
@@ -119,7 +78,6 @@ const LinkedIn = () =>
             <Route path="*" component={redirectToLinkedIn} />
         </Switch>
     </div>;
-
 
 export default LinkedIn;
 
